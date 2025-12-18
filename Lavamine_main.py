@@ -15,7 +15,7 @@ def resource_path(relative_path): #Přemění absolutní cesty na relativní
     return os.path.join(base_path, relative_path)
 #Počítadla📊
 def peníze_counter(x, y):
-    counter_img = counter_font.render (f"$Prachy: {int(peníze)}", True, [40, 120, 10])
+    counter_img = counter_font.render (f"$Prachy: {int(peníze)}", True, [40, 120, 10]) #TODO: u všech countrů přidat randomnumber offest, aby se to někdy updatovalo o 1, někdy o 2 a někdy o 3 i když normální value je stejný
     screen.blit(counter_img, (x, y))
 def kamení_counter(x, y):
     counter_img = counter_font.render (f"Kamení: {int(kamení)}", True, [60, 60, 60])
@@ -44,6 +44,7 @@ version_img = version_font.render ("v 0.5.1dev 18.12.2025", True, [255, 100, 100
 #načtení zvuků
 click = pygame.mixer.Sound(resource_path("sound\click.ogg"))
 click_logo = pygame.mixer.Sound(resource_path("sound/fnaf-freddys-nose-sound.ogg"))
+error = pygame.mixer.Sound(resource_path("sound\error.ogg"))
 build = pygame.mixer.Sound(resource_path("sound\postavit.ogg"))
 tower_build = pygame.mixer.Sound(resource_path("sound/tower.ogg"))
 #nic_zvuk = pygame.mixer.Sound(resource_path("sound/nic.ogg"))
@@ -344,7 +345,7 @@ while run:
             crystalrsch_button = button.button(360, 260, crystalrsch_img, 0.9) #updatne svůj vzhled
         if tower_research_button.draw(screen) and peníze > 2499 and kamení > 799 and krystaly > 499 and tower_research == False: 
             print("🧩Tlačítko VĚŽ výzkum zmáčknuto")
-            sound_play(click)
+            sound_play(error)
             tower_research = True #umožní stavět VĚŽ
             peníze = peníze - 2500
             kamení = kamení - 800
@@ -379,6 +380,7 @@ while run:
                 build = pygame.mixer.Sound(resource_path("sound\postavit.ogg"))
                 tower_build = pygame.mixer.Sound(resource_path("sound/tower.ogg"))
                 click_logo = pygame.mixer.Sound(resource_path("sound/fnaf-freddys-nose-sound.ogg"))
+                error = pygame.mixer.Sound(resource_path("sound\error.ogg"))
                 sound_play(click)
                 sound_img = pygame.image.load(resource_path("assets\Sound_on.png")).convert_alpha()
                 sound_button = button.button( 250, 50, sound_img, 0.8)
@@ -390,6 +392,7 @@ while run:
                 build = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 tower_build = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 click_logo = pygame.mixer.Sound(resource_path("sound/nic.wav"))
+                error = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 sound_img = pygame.image.load(resource_path("assets\Sound_off.png")).convert_alpha()
                 sound_button = button.button( 250, 50, sound_img, 0.8)
                 print("🔇Zvuk vypnut")
