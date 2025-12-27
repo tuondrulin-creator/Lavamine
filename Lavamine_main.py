@@ -44,31 +44,44 @@ pygame.display.set_caption("Lavamine v0.5") #TODO: updatovat verze Lavamine při
 screen = pygame.display.set_mode((1280, 720))
 #verze hry
 version_font = pygame.font.Font("freesansbold.ttf", 20) 
-version_img = version_font.render ("v 0.5.2dev 21.12.2025", True, [255, 100, 100]) #TODO: updatovat verzi a datum vydání verze
+version_img = version_font.render ("v 0.5 27.12.2025", True, [255, 100, 100]) #TODO: updatovat verzi a datum vydání verze
 #načtení zvuků
 click = pygame.mixer.Sound(resource_path("sound\click.ogg"))
 click_logo = pygame.mixer.Sound(resource_path("sound/fnaf-freddys-nose-sound.ogg"))
-explosion = pygame.mixer.Sound(resource_path("sound/fnaf-freddys-nose-sound.ogg")) #TODO: najít zvuk pro tohle a taky přidat kód do tlačítka pro zvuky
+explosion = pygame.mixer.Sound(resource_path("sound/explosion-fx.mp3"))
 error = pygame.mixer.Sound(resource_path("sound\error.ogg"))
 build = pygame.mixer.Sound(resource_path("sound\postavit.ogg"))
 tower_build = pygame.mixer.Sound(resource_path("sound/tower.ogg"))
-#nic_zvuk = pygame.mixer.Sound(resource_path("sound/nic.ogg"))
+fail = pygame.mixer.Sound(resource_path("sound/fail.mp3"))
+nic_zvuk = pygame.mixer.Sound(resource_path("sound/nic.wav")) #TODO: opravit error zvuk u budov
+#načtení hudby
+music = (resource_path("sound/Starscape Drone Battle Music.mp3"))
+pygame.mixer.music.load(music)
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer_music.play()
 # ===načíst tlačítka===
 start_img = pygame.image.load(resource_path("assets\Start_button.png")).convert_alpha()
 exit_img = pygame.image.load(resource_path("assets\Exit_button.png")).convert_alpha()
 settings_img = pygame.image.load(resource_path("assets\Settings_button.png")).convert_alpha()
+
 background_img = pygame.image.load(resource_path("assets\Lavamine_back.png")).convert_alpha()
 research_background_img = pygame.image.load(resource_path("assets\Research_back.png")).convert_alpha()
+
 research_img = pygame.image.load(resource_path("assets\Vyzkum.png")).convert_alpha()
 tutorial_img = pygame.image.load(resource_path("assets\Tutorial.png")).convert_alpha()
 menu_img = pygame.image.load(resource_path("assets\Menu.png")).convert_alpha()
 back_img = pygame.image.load(resource_path("assets\Back.png")).convert_alpha()
+
 Lvl1_research_img = pygame.image.load(resource_path("assets\Lvl1.png")).convert_alpha()
 sound_img = pygame.image.load(resource_path("assets\Sound_on.png")).convert_alpha()
 crystalrsch_img = pygame.image.load(resource_path("assets\Crystal_upgrade.png")).convert_alpha()
 tower_research_img = pygame.image.load(resource_path("assets\Tower_upgrade.png")).convert_alpha()
-mining_upgrade_img = pygame.image.load(resource_path("assets/Mining_upgrade.png")).convert_alpha()
+mining_upgrade_img = pygame.image.load(resource_path("assets\Mining_upgrade.png")).convert_alpha()
+
+medium_img = pygame.image.load(resource_path("assets\Medium.png")).convert_alpha()
+
 gamelogo_img = pygame.image.load(resource_path("assets\Lavamine_icon_high.png")).convert_alpha()
+
 lavamine_img = pygame.image.load(resource_path("assets\Lavamine.png")).convert_alpha()
 stonemine_img = pygame.image.load(resource_path("assets\Stonemine.png")).convert_alpha()
 crystalmine_img = pygame.image.load(resource_path("assets\Crystalmine.png")).convert_alpha()
@@ -100,6 +113,8 @@ crystal_mine1 = button.button(760, 360, crystalmine_img, 1)
 
 tower = button.button(520, 68, tower_img, 1.2)
 
+medium_button = button.button( 250, 250, medium_img, 0.8) #TODO: přidat easy obtížnost s 2x příjmem a hard s 1.5x upgrady a náhodnými poruchami, které spravíš kliknutím
+
 lvl1_research_button = button.button(360, 20, Lvl1_research_img, 0.9)
 crystalrsch_button = button. button(360, 260, crystalrsch_img, 0.9 )
 tower_research_button = button.button(360, 500, tower_research_img, 0.9)
@@ -110,6 +125,8 @@ fontX = 8
 peníze_fontY = 430
 kamení_fontY = 530
 krystaly_fontY = 630
+#ending font
+ending_font = pygame.font.Font("freesansbold.ttf", 46)
 # ===proměnné===
 #proměnné pro hru
 peníze = 150
@@ -135,6 +152,8 @@ tower_research = False
 mining_upgrade = False
 
 ending_screen = False
+self_clicked_ending = True
+played_ending = False
 self_clicked_tutorial = True
 played_tutorial = False
 clicked_zvuk = 0
@@ -164,7 +183,7 @@ while run:
             sys.exit() #Zavře vše pomocí systému
 
     # materiálový příděl ⬇️ 
-    if lavamine_level == 1:
+    if lavamine_level == 1: #TODO: přidat easy mód s dvojnásobkem přísunu zrojů a možná hard mód s dražšímy upgrady
         peníze = peníze + 0.5
     if lavamine_level == 2:
         peníze = peníze + 0.5
@@ -274,10 +293,16 @@ while run:
                 kamení = kamení - 100
                 lavamine_img = pygame.image.load(resource_path("assets\Lavamine_2.png")).convert_alpha()
                 lavamine = button.button(516, 350, lavamine_img, 1)
-                lavamine_level = 2 
+                lavamine_level = 2
+            elif not lavamine_level == 2 and peníze > 299 and kamení > 99 and lvl1_research == False: #TODO: fix this
+                print("❌lavamine nepostaven")   
+                sound_play(nic_zvuk)
+            elif not lavamine_level == 1 and lavamine_level == 2 and peníze > 149:
+                print("❌lavamine nepostaven")   
+                sound_play(nic_zvuk)
         if lavamine1.draw(screen): #Druhý Lavamine
             if lavamine1_level == 0 and peníze > 149: #Pokud je level 1 a peníze jsou 150+
-                sound_play(build)
+                sound_play(build) #TODO: přidat zvuk, když nemáš prachy ať to udělá takový to robloxový drrr
                 print("🛠️Lavamine1 postaven")
                 peníze = peníze - 150 #odečte peníze a změní si sprite a dá se na lvl 1
                 lavamine_img = pygame.image.load(resource_path("assets\Lavamine_1.png")).convert_alpha()
@@ -290,7 +315,10 @@ while run:
                 kamení = kamení - 100
                 lavamine_img = pygame.image.load(resource_path("assets\Lavamine_2.png")).convert_alpha()
                 lavamine1 = button.button(1050, 320, lavamine_img, 1)
-                lavamine1_level = 2 
+                lavamine1_level = 2
+            elif not lavamine1_level == 1 and peníze > 299 and kamení > 99 and lvl1_research == True or lavamine1_level == 0 and peníze > 149:
+                print("❌lavamine1 nepostaven")   #TODO: fix this
+                sound_play(nic_zvuk) 
         if lavamine2.draw(screen): #Druhý Lavamine
             if lavamine2_level == 0 and peníze > 149: #Pokud je level 1 a peníze jsou 150+
                 sound_play(build)
@@ -306,7 +334,10 @@ while run:
                 kamení = kamení - 100
                 lavamine_img = pygame.image.load(resource_path("assets\Lavamine_2.png")).convert_alpha()
                 lavamine2 = button.button(765, 15, lavamine_img, 1)
-                lavamine2_level = 2 
+                lavamine2_level = 2
+            elif not lavamine2_level == 1 and peníze > 299 and kamení > 99 and lvl1_research == True or lavamine2_level == 0 and peníze > 149:
+                print("❌lavamine2 nepostaven")  #TODO: fix this
+                sound_play(nic_zvuk) 
         if crystalrsch == True:
             if crystal_mine.draw(screen):
                 if crystalmine_level == 0 and peníze > 799 and kamení > 399 and crystalrsch == True:
@@ -317,6 +348,9 @@ while run:
                     crystalmine_img = pygame.image.load(resource_path("assets\Crystalmine2.png")).convert_alpha()
                     crystal_mine = button.button(10, 112, crystalmine_img, 1)
                     crystalmine_level = 1
+                elif not crystalmine_level == 0 and peníze > 799 and kamení > 399 and crystalrsch == True:
+                    print("❌crystalmine nepostaven")  
+                    sound_play(nic_zvuk) #TODO: fix this
             if crystal_mine1.draw(screen):
                 if crystalmine1_level == 0 and peníze > 799 and kamení > 399 and crystalrsch == True:
                     sound_play(build)
@@ -326,6 +360,9 @@ while run:
                     crystalmine_img = pygame.image.load(resource_path("assets\Crystalmine1.png")).convert_alpha()
                     crystal_mine1 = button.button(760, 360, crystalmine_img, 1)
                     crystalmine1_level = 1
+                elif not crystalmine1_level == 0 and peníze > 799 and kamení > 399 and crystalrsch == True:
+                    print("❌crystalmine1 nepostaven")  
+                    sound_play(nic_zvuk) #TODO: fix this 
 
         if stone_mine.draw(screen):
             if stonemine_level == 0 and peníze > 199:
@@ -335,6 +372,9 @@ while run:
                 stonemine_img = pygame.image.load(resource_path("assets\Stonemine_1.png")).convert_alpha()
                 stone_mine = button.button(300, 350, stonemine_img, 1)
                 stonemine_level = 1
+            elif not stonemine_level == 0 and peníze > 199:
+                print("❌Stonemine nepostaven")  
+                sound_play(nic_zvuk) #TODO: fix this
         if stone_mine1.draw(screen):
             if stonemine1_level == 0 and peníze > 199:
                 sound_play(build)
@@ -343,10 +383,13 @@ while run:
                 stonemine_img = pygame.image.load(resource_path("assets\Stonemine_1.png")).convert_alpha()
                 stone_mine1 = button.button(300, 535, stonemine_img, 1)
                 stonemine1_level = 1
+            elif not stonemine1_level == 0 and peníze > 199:
+                print("❌Stonemine1 nepostaven") 
+                sound_play(nic_zvuk)#TODO: fix this
         # ========VĚŽ========
         if tower_research == True or tower_research == "postavena":
             if tower.draw(screen):
-                if peníze > 3499 and kamení > 1499 and krystaly > 799 and tower_research == True:
+                if peníze > 3499 and kamení > 1499 and krystaly > 799 and tower_research == True and not tower_research == "postavena" or tower_research == "čeká":
                     sound_play(tower_build)
                     print("😈VĚŽ POSTAVENA!")
                     peníze = peníze - 3500
@@ -360,6 +403,8 @@ while run:
                     print("🧩VĚŽ zahajuje ending")
                     hlavní_hra = "ostatní"
                     ending_screen = True
+                elif not peníze > 3499 and kamení > 1499 and krystaly > 799 and tower_research == True and not tower_research == "postavena": 
+                    sound_play(fail)
         #verze
         version_show(version_img)
         #Počítadla 📊
@@ -372,40 +417,54 @@ while run:
             sound_play(click)
             research_screen = False #zavře research screen
             hlavní_hra = True #otevře hlavní hru
-        if lvl1_research_button.draw(screen) and peníze > 499 and lvl1_research == False: 
-            print("🧩Tlačítko LVL1 výzkum zmáčknuto")
-            sound_play(click)
-            lvl1_research = True #umožní stavět lvl1 budovy
-            peníze = peníze - 500
-            Lvl1_research_img = pygame.image.load(resource_path("assets\Lvl1_bought.png")).convert_alpha() #změní obrázek
-            lvl1_research_button = button.button(360, 20, Lvl1_research_img, 0.9) #updatne svůj vzhled
-        if crystalrsch_button.draw(screen) and peníze > 599 and kamení > 349 and crystalrsch == False: 
-            print("🧩Tlačítko CRYSTAL výzkum zmáčknuto")
-            sound_play(click)
-            crystalrsch = True #umožní stavět krystalové budovy
-            peníze = peníze - 600
-            kamení = kamení - 350
-            crystalrsch_img = pygame.image.load(resource_path("assets/Crystal_upgrade_bought.png")).convert_alpha() #změní obrázek
-            crystalrsch_button = button.button(360, 260, crystalrsch_img, 0.9) #updatne svůj vzhled
-        if tower_research_button.draw(screen) and peníze > 2499 and kamení > 799 and krystaly > 499 and tower_research == False: 
-            print("🧩Tlačítko VĚŽ výzkum zmáčknuto")
-            hlavní_hra = "čeká"
-            sound_play(error)
-            tower_research = True #umožní stavět VĚŽ
-            peníze = peníze - 2500
-            kamení = kamení - 800
-            krystaly = krystaly - 500
-            tower_research_img = pygame.image.load(resource_path("assets/Tower_upgrade_bought.png")).convert_alpha() #změní obrázek
-            tower_research_button = button.button(360, 500, tower_research_img, 0.9)#updatne svůj vzhled
-        if mining_upgrade_button.draw(screen) and peníze > 499 and kamení > 199 and krystaly > 99 and mining_upgrade == False: 
-            print("🧩Tlačítko MINING výzkum zmáčknuto")
-            sound_play(click)
-            mining_upgrade = True #Na začátku kódu odebere peníze a přidá krystaly a kamení
-            peníze = peníze - 500
-            kamení = kamení - 200
-            krystaly = krystaly - 100
-            mining_upgrade_img = pygame.image.load(resource_path("assets/Mining_upgrade_bought.png")).convert_alpha() #změní obrázek
-            mining_upgrade_button = button.button(760, 20, mining_upgrade_img, 0.9) #updatne svůj vzhled
+        if lvl1_research_button.draw(screen): 
+            if peníze > 499 and lvl1_research == False: 
+                print("🧩Tlačítko LVL1 výzkum zmáčknuto")
+                sound_play(click)
+                lvl1_research = True #umožní stavět lvl1 budovy
+                peníze = peníze - 500
+                Lvl1_research_img = pygame.image.load(resource_path("assets\Lvl1_bought.png")).convert_alpha() #změní obrázek
+                lvl1_research_button = button.button(360, 20, Lvl1_research_img, 0.9) #updatne svůj vzhled
+            elif not peníze > 499 and lvl1_research == False:
+                sound_play(fail)
+        if crystalrsch_button.draw(screen): 
+            if peníze > 599 and kamení > 349 and crystalrsch == False: 
+                print("🧩Tlačítko CRYSTAL výzkum zmáčknuto")
+                sound_play(click)
+                crystalrsch = True #umožní stavět krystalové budovy
+                peníze = peníze - 600
+                kamení = kamení - 350
+                crystalrsch_img = pygame.image.load(resource_path("assets/Crystal_upgrade_bought.png")).convert_alpha() #změní obrázek
+                crystalrsch_button = button.button(360, 260, crystalrsch_img, 0.9) #updatne svůj vzhled
+            elif not crystalrsch == True:
+                sound_play(fail)
+        if tower_research_button.draw(screen): 
+            if peníze > 2499 and kamení > 799 and krystaly > 499 and tower_research == False: 
+                print("🧩Tlačítko VĚŽ výzkum zmáčknuto")
+                hlavní_hra = "čeká"
+                pygame.mixer_music.stop()
+                pygame.mixer.music.unload()
+                sound_play(error)
+                tower_research = True #umožní stavět VĚŽ
+                peníze = peníze - 2500
+                kamení = kamení - 800
+                krystaly = krystaly - 500
+                tower_research_img = pygame.image.load(resource_path("assets/Tower_upgrade_bought.png")).convert_alpha() #změní obrázek
+                tower_research_button = button.button(360, 500, tower_research_img, 0.9)#updatne svůj vzhled
+            elif not tower_research == True:
+                sound_play(fail)
+        if mining_upgrade_button.draw(screen): 
+            if peníze > 499 and kamení > 199 and krystaly > 99 and mining_upgrade == False: 
+                print("🧩Tlačítko MINING výzkum zmáčknuto")
+                sound_play(click)
+                mining_upgrade = True #Na začátku kódu odebere peníze a přidá krystaly a kamení
+                peníze = peníze - 500
+                kamení = kamení - 200
+                krystaly = krystaly - 100
+                mining_upgrade_img = pygame.image.load(resource_path("assets/Mining_upgrade_bought.png")).convert_alpha() #změní obrázek
+                mining_upgrade_button = button.button(760, 20, mining_upgrade_img, 0.9) #updatne svůj vzhled
+            elif not mining_upgrade == True:
+                sound_play(fail)
         #verze
         version_show(version_img)  
         #Počítadla 📊
@@ -416,7 +475,8 @@ while run:
             print("🧩Tlačítko MENU (Nastavení) zmáčknuto")
             sound_play(click)
             hlavní_hra = False
-            nastavení = False  
+            nastavení = False
+        medium_button.draw(screen)  
         if sound_button.draw(screen):
             print("🧩Tlačítko ZVUK zmáčknuto")
             if zvuk == "off" and clicked_zvuk > 3:
@@ -429,6 +489,8 @@ while run:
                 sound_play(click)
                 sound_img = pygame.image.load(resource_path("assets\Sound_on.png")).convert_alpha()
                 sound_button = button.button( 250, 50, sound_img, 0.8)
+                pygame.mixer.music.load(music)
+                pygame.mixer_music.play()
                 print ("🔊Zvuk zapnut")
                 clicked_zvuk = 0
             elif zvuk == "on" and clicked_zvuk > 3:
@@ -438,8 +500,11 @@ while run:
                 tower_build = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 click_logo = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 error = pygame.mixer.Sound(resource_path("sound/nic.wav"))
+                explosion = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 sound_img = pygame.image.load(resource_path("assets\Sound_off.png")).convert_alpha()
                 sound_button = button.button( 250, 50, sound_img, 0.8)
+                pygame.mixer_music.stop()
+                pygame.mixer.music.unload()
                 print("🔇Zvuk vypnut")
                 clicked_zvuk = 0
     if tutorial_screen == True:
@@ -468,16 +533,53 @@ while run:
         else:
             tutorial_text4 = counter_font.render ("Je to velmi lehké, takže řeknu jenom začátek.", True, [0, 0, 0]) 
             screen.blit(tutorial_text4, (25, 40))
-            tutorial_text5 = counter_font.render ("Toto je panel se zdroji, ukazuje kolik máte zdrojů.", True, [0, 0, 0]) 
+            tutorial_text5 = counter_font.render ("Toto je panel se zdroji, ukazuje kolik máš zdrojů.", True, [0, 0, 0]) 
             screen.blit(tutorial_text5, (10, 200))
             tutorial_text6 = counter_font.render ("Toto je Lavamine, postav ho pro více peněz.", True, [0, 0, 0]) 
             screen.blit(tutorial_text6, (470, 280))
-            tutorial_text7 = counter_font.render ("To je vše, zbytek určitě zvládnete, tak čau!", True, [0, 0, 0]) 
+            tutorial_text7 = counter_font.render ("To je vše, zbytek určitě zvládneš, tak čau!", True, [0, 0, 0]) 
             screen.blit(tutorial_text7, (500, 600))
     if ending_screen == True:
-        ending_text1 = counter_font.render ("Ending je WIP, děkuji za hraní!", True, [0, 0, 0]) 
-        screen.blit(ending_text1, (25, 40))
-
+        tutorial_img = pygame.image.load(resource_path("assets\Tutorial.png")).convert_alpha()
+        tutorial_background = button.button ( 0, 0, tutorial_img, 1)
+        if tutorial_background.draw(screen):
+            if pygame.mouse.get_pressed()[0] == 1 and self_clicked_ending == False and played_ending == False: #zabraňuje tomu aby držení myši okamžitě přeskočilo ending, myš musí být zmáčknuta znovu
+                self_clicked_ending = True #Zastaví další zmáčknutí
+                print("🧩ENDING zmáčknut 1/2")
+                played_ending = True
+            elif pygame.mouse.get_pressed()[0] == 1 and self_clicked_ending == False and played_ending == True: #pokud je myš zmáčknuta po 2. tak se tohle spustí
+                print("🧩ENDING zmáčknut (ENDING dokončen)")
+                self_clicked_ending = True
+                ending_screen = "credits"
+        if pygame.mouse.get_pressed()[0] == 0:
+                self_clicked_ending = False #odklikne tlačítko, aby se mohlo znovu zmáčknout
+        if played_ending == False:
+            ending_text1 = counter_font.render ("(Dostali jste normal ending)", True, [0, 0, 0]) 
+            screen.blit(ending_text1, (25, 40))
+            ending_text2 = counter_font.render ("Děkuji za pomoc s vytěžením této planety.", True, [0, 0, 0]) 
+            screen.blit(ending_text2, (25, 180))
+            ending_text3 = counter_font.render ("Hodí se nám to pro invazi na Zemi...", True, [0, 0, 0]) 
+            screen.blit(ending_text3, (25, 220))
+        else:
+            ending_text4 = counter_font.render ("...A ty, tebe se zbavíme.", True, [0, 0, 0]) 
+            screen.blit(ending_text4, (25, 40))
+            ending_text5 = counter_font.render ("To co jsi zde udělal někde napíšeme mezi dětské pohádky.", True, [0, 0, 0]) 
+            screen.blit(ending_text5, (25, 80))
+            ending_text6 = ending_font.render ("ZBOHEM!", True, [0, 0, 0]) 
+            screen.blit(ending_text6, (25, 260))
+    elif ending_screen == "credits":
+        tutorial_img = pygame.image.load(resource_path("assets\Credits.png")).convert_alpha()
+        tutorial_background = button.button ( 0, 0, tutorial_img, 1)
+        tutorial_background.draw(screen)
+        if pygame.mouse.get_pressed()[0] == 1 and self_clicked_ending == False:
+            ending_screen = "konec"
+        elif pygame.mouse.get_pressed()[0] == 0:
+                self_clicked_ending = False 
+    elif ending_screen == "konec":
+        tutorial_img = pygame.image.load(resource_path("assets\Ending.png")).convert_alpha()
+        tutorial_background = button.button ( 0, 0, tutorial_img, 1)
+        tutorial_background.draw(screen)
+        
     pygame.display.update()
     clock.tick(fps)
 print("❌Konec loopu")
