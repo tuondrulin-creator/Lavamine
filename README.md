@@ -8,5 +8,11 @@ My first Python game made in Pygame, i didnt use AI for this one (Just tutorials
                                                                                                           
     Česky:
 Komentáře kódu a hra jsou česky, ale jména někrerých proměnných a assetů jsou v angličtině.
-První Pythonová hry, kterou jsem vytvořil sám, nepoužíval jsem AI(Pouze tutoriály, fóra a dokumentaci). Je to 2D krátka hra, kde stavíš budovy pro více budov, dokud nepostavíš všechny a pak je konec. Hra trvá kolem 8 minut. Celá hra se dá kompilovat do .exe zapomocí příkazu: pyinstaller --onefile --windowed --icon=Lavamine.ico --add-data "assets;assets" --add-data "sound;sound" Lavamine_main.py v powershell v složce s Lavamine_main.py.
+První Pythonová hry, kterou jsem vytvořil sám, nepoužíval jsem AI(Pouze tutoriály, fóra a dokumentaci). Je to 2D krátka hra, kde stavíš budovy pro více budov, dokud nepostavíš všechny a pak je konec. Hra trvá kolem 8 minut. Celá hra se dá kompilovat do .exe zapomocí příkazu:
+
+    pyinstaller --onefile --windowed --icon=Lavamine.ico --add-data "assets;assets" --add-data "sound;sound"
+                
+Lavamine_main.py v powershell v složce s Lavamine_main.py.
+
+Jelikož jsem nový na Githubu a Pythonu, pls no hate a díky za hraní!
 
