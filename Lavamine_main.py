@@ -1,3 +1,4 @@
+#Lavamine_main.py Pokud toto vidíte a jste hráč, tak toto je kód celé hry a nevím jak jste se sem dostali, kdyžtak více detailů na https://github.com/tuondrulin-creator/Lavamine
 #Importování knihoven
 import pygame
 import button
@@ -40,11 +41,11 @@ pygame.mixer.init()
 pygame.font.init()
 icon = pygame.image.load(resource_path("assets/Lavamine_icon.png"))
 pygame.display.set_icon(icon)
-pygame.display.set_caption("Lavamine v0.5") #TODO: updatovat verze Lavamine při update
+pygame.display.set_caption("Lavamine v0.5,1") #updatovat verze Lavamine při update
 screen = pygame.display.set_mode((1280, 720))
 #verze hry
 version_font = pygame.font.Font("freesansbold.ttf", 20) 
-version_img = version_font.render ("v 0.5 27.12.2025", True, [255, 100, 100]) #TODO: updatovat verzi a datum vydání verze
+version_img = version_font.render ("v 0.5.1 19.1.2026", True, [255, 100, 100]) #updatovat verzi a datum vydání verze
 #načtení zvuků
 click = pygame.mixer.Sound(resource_path("sound\click.ogg"))
 click_logo = pygame.mixer.Sound(resource_path("sound/fnaf-freddys-nose-sound.ogg"))
@@ -56,6 +57,8 @@ fail = pygame.mixer.Sound(resource_path("sound/fail.mp3"))
 nic_zvuk = pygame.mixer.Sound(resource_path("sound/nic.wav")) #TODO: opravit error zvuk u budov
 #načtení hudby
 music = (resource_path("sound/Starscape Drone Battle Music.mp3"))
+music_normalending = (resource_path("sound/Space Cinematic Ambient Free Music No Copyright.mp3"))
+music_easyending = (resource_path("sound/Outside Ambience.mp3"))
 pygame.mixer.music.load(music)
 pygame.mixer.music.set_volume(0.3)
 pygame.mixer_music.play()
@@ -73,10 +76,12 @@ menu_img = pygame.image.load(resource_path("assets\Menu.png")).convert_alpha()
 back_img = pygame.image.load(resource_path("assets\Back.png")).convert_alpha()
 
 Lvl1_research_img = pygame.image.load(resource_path("assets\Lvl1.png")).convert_alpha()
-sound_img = pygame.image.load(resource_path("assets\Sound_on.png")).convert_alpha()
 crystalrsch_img = pygame.image.load(resource_path("assets\Crystal_upgrade.png")).convert_alpha()
 tower_research_img = pygame.image.load(resource_path("assets\Tower_upgrade.png")).convert_alpha()
 mining_upgrade_img = pygame.image.load(resource_path("assets\Mining_upgrade.png")).convert_alpha()
+
+sound_img = pygame.image.load(resource_path("assets\Sound_on.png")).convert_alpha()
+music_img = pygame.image.load(resource_path("assets\Music_on.png")).convert_alpha()
 
 medium_img = pygame.image.load(resource_path("assets\Medium.png")).convert_alpha()
 
@@ -99,7 +104,9 @@ tutorial_background = button.button ( 0, 0, tutorial_img, 1) #Pozadí pro tutori
 research_button = button.button( 993, 540, research_img, 0.8)
 menu_button = button.button( 1082, 0, menu_img, 0.55)
 back_button = button.button( 0, 0, back_img, 0.8)
-sound_button = button.button( 250, 50, sound_img, 0.8)
+
+sound_button = button.button( 250, 50, sound_img, 0.8) #Vypíná zvuky
+music_button = button.button( 600, 50, music_img, 0.8) #Vypíná hudbu
 
 lavamine = button.button(516, 350, lavamine_img, 1)
 lavamine1 = button.button(1050, 320, lavamine_img, 1)
@@ -114,6 +121,7 @@ crystal_mine1 = button.button(760, 360, crystalmine_img, 1)
 tower = button.button(520, 68, tower_img, 1.2)
 
 medium_button = button.button( 250, 250, medium_img, 0.8) #TODO: přidat easy obtížnost s 2x příjmem a hard s 1.5x upgrady a náhodnými poruchami, které spravíš kliknutím
+                                                          #TODO 2: vypnout toto po spuštění hry 
 
 lvl1_research_button = button.button(360, 20, Lvl1_research_img, 0.9)
 crystalrsch_button = button. button(360, 260, crystalrsch_img, 0.9 )
@@ -129,9 +137,9 @@ krystaly_fontY = 630
 ending_font = pygame.font.Font("freesansbold.ttf", 46)
 # ===proměnné===
 #proměnné pro hru
-peníze = 150
-kamení = 0
-krystaly = 0
+peníze = 999999150
+kamení = 99999990
+krystaly = 99999990
 
 lavamine_level = 0
 lavamine1_level = 0
@@ -158,6 +166,7 @@ self_clicked_tutorial = True
 played_tutorial = False
 clicked_zvuk = 0
 zvuk = "on"
+hudba = "on"
 fps = 20 #framerate
 clock = pygame.time.Clock() #definuje hodiny
 
@@ -168,7 +177,7 @@ research_screen = False
 tutorial_screen = False
 
 run = True #spustí loop
-# ===🛞Hlavní loop===
+# ===Hlavní loop===
 while run:
     clicked_zvuk = clicked_zvuk + 1 #Pro tlačítko nastavení zvuku, aby šlo zmáčknout pouze 1 za frame
     if clicked_zvuk > 6: #Aby zbetečně nepřetíkala tato proměnná
@@ -302,7 +311,7 @@ while run:
                 sound_play(nic_zvuk)
         if lavamine1.draw(screen): #Druhý Lavamine
             if lavamine1_level == 0 and peníze > 149: #Pokud je level 1 a peníze jsou 150+
-                sound_play(build) #TODO: přidat zvuk, když nemáš prachy ať to udělá takový to robloxový drrr
+                sound_play(build)
                 print("🛠️Lavamine1 postaven")
                 peníze = peníze - 150 #odečte peníze a změní si sprite a dá se na lvl 1
                 lavamine_img = pygame.image.load(resource_path("assets\Lavamine_1.png")).convert_alpha()
@@ -457,6 +466,7 @@ while run:
             if peníze > 499 and kamení > 199 and krystaly > 99 and mining_upgrade == False: 
                 print("🧩Tlačítko MINING výzkum zmáčknuto")
                 sound_play(click)
+                fps = 25 #zrychlí obecně přísun zdrojů
                 mining_upgrade = True #Na začátku kódu odebere peníze a přidá krystaly a kamení
                 peníze = peníze - 500
                 kamení = kamení - 200
@@ -476,8 +486,30 @@ while run:
             sound_play(click)
             hlavní_hra = False
             nastavení = False
-        medium_button.draw(screen)  
-        if sound_button.draw(screen):
+        medium_button.draw(screen)
+
+        if music_button.draw(screen): #Specificky pro hudbu
+            print("🧩Tlačítko HUDBA zmáčknuto")
+            if hudba == "off" and clicked_zvuk > 3:
+                hudba = "on"
+                sound_play(click)
+                pygame.mixer.music.load(music)
+                pygame.mixer_music.play()
+                music_img = pygame.image.load(resource_path("assets\Music_on.png")).convert_alpha()
+                music_button = button.button( 600, 50, music_img, 0.8) 
+                print ("🔊Hudba zapnuta")
+                clicked_zvuk = 0
+            elif hudba == "on" and clicked_zvuk > 3:
+                hudba = "off"
+                sound_play(click)
+                pygame.mixer_music.stop()
+                pygame.mixer.music.unload()
+                music_img = pygame.image.load(resource_path("assets\Music_off.png")).convert_alpha()
+                music_button = button.button( 600, 50, music_img, 0.8) 
+                print("🔇Hudba vypnuta")
+                clicked_zvuk = 0
+
+        if sound_button.draw(screen): #Specificky pro zvuk
             print("🧩Tlačítko ZVUK zmáčknuto")
             if zvuk == "off" and clicked_zvuk > 3:
                 zvuk = "on"
@@ -489,8 +521,6 @@ while run:
                 sound_play(click)
                 sound_img = pygame.image.load(resource_path("assets\Sound_on.png")).convert_alpha()
                 sound_button = button.button( 250, 50, sound_img, 0.8)
-                pygame.mixer.music.load(music)
-                pygame.mixer_music.play()
                 print ("🔊Zvuk zapnut")
                 clicked_zvuk = 0
             elif zvuk == "on" and clicked_zvuk > 3:
@@ -503,10 +533,9 @@ while run:
                 explosion = pygame.mixer.Sound(resource_path("sound/nic.wav"))
                 sound_img = pygame.image.load(resource_path("assets\Sound_off.png")).convert_alpha()
                 sound_button = button.button( 250, 50, sound_img, 0.8)
-                pygame.mixer_music.stop()
-                pygame.mixer.music.unload()
                 print("🔇Zvuk vypnut")
                 clicked_zvuk = 0
+
     if tutorial_screen == True:
         if tutorial_background.draw(screen):
                 if pygame.mouse.get_pressed()[0] == 1 and self_clicked_tutorial == False and played_tutorial == False: #zabraňuje tomu aby držení myši okamžitě přskočilo tutorial, myš musí být zmáčknuta znovu
@@ -567,6 +596,9 @@ while run:
             screen.blit(ending_text5, (25, 80))
             ending_text6 = ending_font.render ("ZBOHEM!", True, [0, 0, 0]) 
             screen.blit(ending_text6, (25, 260))
+            if hudba == "on":
+                pygame.mixer.music.load(music_normalending)
+                pygame.mixer_music.play()
     elif ending_screen == "credits":
         tutorial_img = pygame.image.load(resource_path("assets\Credits.png")).convert_alpha()
         tutorial_background = button.button ( 0, 0, tutorial_img, 1)
