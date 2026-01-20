@@ -20,3 +20,5 @@ v powershell v složce s Lavamine_main.py.
 
 Jelikož jsem nový na Githubu a Pythonu, pls no hate a díky za hraní!
 
+Github repozitář na: https://github.com/tuondrulin-creator/Lavamine
+
