@@ -1,5 +1,5 @@
-# Lavamine
-<img width="48" height="48" alt="Lavamine_icon" src="https://github.com/user-attachments/assets/741ee966-27d8-48ae-86e8-a9dff54f2bac" />vamine!
+
+# <img width="48" height="48" alt="Lavamine_icon" src="https://github.com/user-attachments/assets/741ee966-27d8-48ae-86e8-a9dff54f2bac" />vamine!
                                                              
 ## **English:**       
 The comments and game are in Czech!
