@@ -9,6 +9,13 @@ My first Python game made in Pygame, i didnt use AI for this one (Just tutorials
     pyinstaller --onefile --windowed --icon=Lavamine.ico --add-data "assets;assets" --add-data "sound;sound" Lavamine_main.py 
 in powershell in the folder, where Lavamine_main.py is.
 
+## Compatibility
+
+❌ DOS (any version) - sorry, MZ stub says no
+❌ 32-bit Windows - x64 only, deal with it  
+❌ Windows XP/Vista - too old, go home
+✅ Windows 10/11 x64 - W11 tested
+✅ Linux (Wine, godspeed), yes I could add native Linux support, but for a random first project? No.
 ## **Česky:**
 
 Komentáře kódu a hra jsou česky, ale jména některých proměnných a assetů jsou v angličtině.
@@ -21,3 +28,10 @@ Jelikož jsem nový na Githubu a Pythonu, pls no hate a díky za hraní!
 
 Github repozitář na: https://github.com/tuondrulin-creator/Lavamine
 
+## Compatibilita
+
+❌ DOS (Jakákoliv verze) - sorry, MZ stub říká ne
+❌ 32-bit Windows - x64 pouze, zkompiluj si na x32 sám
+❌ Windows XP/Vista - V roce 2026 nebo ještě dál, proč???
+✅ Windows 10/11 x64 - W11 testováno
+✅ Linux (Wine, godspeed), ano můžu native Linux přidat, ne na random první projekt příliš.
