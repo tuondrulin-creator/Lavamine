@@ -16,9 +16,21 @@ in powershell in the folder, where Lavamine_main.py is.
 ❌ 32-bit Windows - x64 only, deal with it  
 
 ❌ Windows XP/Vista - too old, go home
+
 ✅ Windows 10/11 x64 - W11 tested
 
 ✅ Linux (Wine, godspeed), yes I could add native Linux support, but for a random first project? No.
+### Requirements
+Procesor - No, don't try running this on a NPU or GPU
+
+2D renderer - GPU recommended, though as long it runs OpenGL, its fine
+
+RAM - Enough to run the system and have around 500MB free, Lavamine is tiny, you could go tigher
+
+Electricity - Mechanical PCs aint gonna cut it, sorry.
+
+Github repo at: https://github.com/tuondrulin-creator/Lavamine
+
 ## **Česky:**
 
 Komentáře kódu a hra jsou česky, ale jména některých proměnných a assetů jsou v angličtině.
@@ -26,10 +38,6 @@ První Pythonová hra (Používá Pygame knihovnu), kterou jsem vytvořil sám, 
 
     pyinstaller --onefile --windowed --icon=Lavamine.ico --add-data "assets;assets" --add-data "sound;sound" Lavamine_main.py 
 v powershell v složce s Lavamine_main.py.
-
-Jelikož jsem nový na Githubu a Pythonu, pls no hate a díky za hraní!
-
-Github repozitář na: https://github.com/tuondrulin-creator/Lavamine
 
 ### Kompatibilita
 
@@ -40,5 +48,17 @@ Github repozitář na: https://github.com/tuondrulin-creator/Lavamine
 ❌ Windows XP/Vista - V roce 2026 nebo ještě dál, proč???
 
 ✅ Windows 10/11 x64 - W11 testováno
+### Requirements
+Procesor - Ne na NPU tohle nerozjedeš, prosím nezkoušej
+
+2D renderer - většinou GPU, ale dokud to rozjede OpenGL, tak dobré
+
+RAM - Dostatek na rozjetí systému s tak 500NB rezervou, Lavamine má jenom pár MB, takže se tam bude vejít
+
+Elektřina - Bohužel tohle na mechanickém počítači nerozjedeš
+
+Jelikož jsem nový na Githubu a Pythonu, pls no hate a díky za hraní!
+
+Github repozitář na: https://github.com/tuondrulin-creator/Lavamine
 
 ✅ Linux (Wine, godspeed), ano můžu native Linux přidat, ne na random první projekt příliš.
