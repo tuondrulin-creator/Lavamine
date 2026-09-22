@@ -25,7 +25,7 @@ Procesor - No, don't try running this on a NPU or GPU
 
 2D renderer - GPU recommended, though as long it runs OpenGL, its fine
 
-RAM - Enough to run the system and have around 500MB free, Lavamine is tiny, you could go tigher
+RAM - Enough to run the system and have around 500MB free, Lavamine is tiny
 
 Electricity - Mechanical PCs aint gonna cut it, sorry.
 
@@ -48,12 +48,14 @@ v powershell v složce s Lavamine_main.py.
 ❌ Windows XP/Vista - V roce 2026 nebo ještě dál, proč???
 
 ✅ Windows 10/11 x64 - W11 testováno
+
+✅ Linux (Wine, godspeed), ano můžu native Linux přidat, ne na random první projekt příliš.
 ### Requirements
 Procesor - Ne na NPU tohle nerozjedeš, prosím nezkoušej
 
 2D renderer - většinou GPU, ale dokud to rozjede OpenGL, tak dobré
 
-RAM - Dostatek na rozjetí systému s tak 500NB rezervou, Lavamine má jenom pár MB, takže se tam bude vejít
+RAM - Dostatek na rozjetí systému s tak 500MB rezervou, Lavamine má jenom pár MB, takže se vejde
 
 Elektřina - Bohužel tohle na mechanickém počítači nerozjedeš
 
@@ -61,4 +63,3 @@ Jelikož jsem nový na Githubu a Pythonu, pls no hate a díky za hraní!
 
 Github repozitář na: https://github.com/tuondrulin-creator/Lavamine
 
-✅ Linux (Wine, godspeed), ano můžu native Linux přidat, ne na random první projekt příliš.
